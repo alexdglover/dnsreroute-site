@@ -1000,7 +1000,8 @@ PANELS CONFIGURATIONS
 /*Panel Size*/
 
 .pn {
-	height: 250px;
+  /* original value - height: 250px;*/
+  height: 420px;
 	box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -1067,6 +1068,40 @@ PANELS CONFIGURATIONS
 	font-weight: 700;
 }
 
+/* Blue*/
+
+.blue-panel {
+	text-align: center;
+	background: #424a5d;
+}
+.blue-panel .blue-header {
+	background: #428bca;
+	padding: 3px;
+	margin-bottom: 15px;
+}
+.blue-panel h1 {
+	color: white;
+}
+.blue-panel h2 {
+	color: white;
+}
+.blue-panel p {
+	color: white;
+}
+.blue-panel h5 {
+	font-weight: 200;
+	margin-top: 10px;
+	color: white;
+}
+.blue-panel footer {
+	color: white;
+}
+.blue-panel footer h5 {
+	margin-left:10px;
+	margin-right: 10px;
+	font-weight: 700;
+}
+
 /*Green Panel*/
 .green-panel {
 	text-align: center;
@@ -1094,7 +1129,7 @@ PANELS CONFIGURATIONS
 .white-panel {
 	text-align: center;
 	background: #ffffff;
-	color: #ccd1d9;
+	color: #424a5d;
 }
 
 .white-panel p {
@@ -1106,15 +1141,15 @@ PANELS CONFIGURATIONS
 	background: #f4f4f4;
 	padding: 3px;
 	margin-bottom: 15px;
-	color: #c6c6c6;
+	color: #424a5d;
 }
 .white-panel .small {
 	font-size: 10px;
-	color: #ccd1d9;
+	color: #424a5d;
 }
 
 .white-panel i {
-	color: #428bca;
+	color: #424a5d;
 	padding-right: 4px;
 	font-size: 14px;
 }
@@ -2342,4 +2377,8 @@ label {
   40% {
     box-shadow: 0 2.5em 0 0;
   }
+}
+
+.table-white-bkg {
+  background: white;
 }
