@@ -2,6 +2,7 @@
 var auth0Profile;
 var org;
 var user;
+var subscriptionName;
 
 $(document).ready(function() {
       var lock = new Auth0Lock(
@@ -83,7 +84,7 @@ $(document).ready(function() {
     function setUserAndOrg(callback){
       if(typeof auth0Profile !== 'undefined'){
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -105,7 +106,7 @@ $(document).ready(function() {
     function setOrg(callback){
       if(typeof user !== 'undefined'){
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + user.orgId,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + user.orgId,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -132,7 +133,7 @@ $(document).ready(function() {
       $('#dashboardRoutesTableLoader').show();
       if(auth0Profile){
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/routes/byUserEmail/' + auth0Profile.email,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/byUserEmail/' + auth0Profile.email,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -182,7 +183,7 @@ $(document).ready(function() {
     function populateBillingPanel(){
       if(typeof auth0Profile !== 'undefined'){
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/subscriptions/' + org.subscription,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/subscriptions/' + org.subscription,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -213,7 +214,7 @@ $(document).ready(function() {
         $('.nickname').text(auth0Profile.name);
         $('#profile-photo').attr('src', auth0Profile.picture);
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -243,7 +244,7 @@ $(document).ready(function() {
     function registerNewUser(){
       console.log('registerNewUser function triggered');
       $.ajax({
-        url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+        url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
         dataType: 'json',
         type: 'GET'
       }).then(function(data, textStatus, jqXHR) {
@@ -254,7 +255,7 @@ $(document).ready(function() {
 
 
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/users',
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
           dataType: 'json',
           type: 'POST',
           data: {
@@ -278,7 +279,7 @@ $(document).ready(function() {
       console.log(incomingRoute);
       if(auth0Profile){
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/routes/' + incomingRoute,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/' + incomingRoute,
           dataType: 'json',
           type: 'DELETE'
         }).then(function(data, textStatus, jqXHR) {
@@ -300,7 +301,7 @@ $(document).ready(function() {
       if(auth0Profile){
         formData = $('#addRouteForm').serialize();
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/routes',
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes',
           dataType: 'json',
           data: formData,
           type: 'POST'
@@ -339,6 +340,15 @@ $(document).ready(function() {
         $('#freeTierSelected').show();
         $('#freeTierPanel').addClass('blue-panel').removeClass('white-panel');
         $('#freeTierHeader').addClass('blue-header').removeClass('white-header');
+        // Revert other panels to un-selected state
+        $('#developerTierSelected').hide();
+        $('#developerTierPanel').addClass('white-panel').removeClass('blue-panel');
+        $('#developerTierHeader').addClass('white-header').removeClass('blue-header');
+        $('#enterpriseTierSelected').hide();
+        $('#enterpriseTierPanel').addClass('white-panel').removeClass('blue-panel');
+        $('#enterpriseTierHeader').addClass('white-header').removeClass('blue-header');
+        $('#switchToFree').hide();
+
         $('#switchToDeveloper').show();
         $('#switchToEnterprise').show();
       }
@@ -346,6 +356,15 @@ $(document).ready(function() {
         $('#developerTierSelected').show();
         $('#developerTierPanel').addClass('blue-panel').removeClass('white-panel');
         $('#developerTierHeader').addClass('blue-header').removeClass('white-header');
+        // Revert other panels to white in case they were blue before
+        $('#freeTierSelected').hide();
+        $('#freeTierPanel').addClass('white-panel').removeClass('blue-panel');
+        $('#freeTierHeader').addClass('white-header').removeClass('blue-header');
+        $('#enterpriseTierSelected').hide();
+        $('#enterpriseTierPanel').addClass('white-panel').removeClass('blue-panel');
+        $('#enterpriseTierHeader').addClass('white-header').removeClass('blue-header');
+        $('#switchToDeveloper').hide();
+
         $('#switchToFree').show();
         $('#switchToEnterprise').show();
       }
@@ -353,6 +372,15 @@ $(document).ready(function() {
         $('#enterpriseTierSelected').show();
         $('#enterpriseTierPanel').addClass('blue-panel').removeClass('white-panel');
         $('#enterpriseTierHeader').addClass('blue-header').removeClass('white-header');
+        // Revert other panels to white in case they were blue before
+        $('#freeTierSelected').hide();
+        $('#freeTierPanel').addClass('white-panel').removeClass('blue-panel');
+        $('#freeTierHeader').addClass('white-header').removeClass('blue-header');
+        $('#developerTierSelected').hide();
+        $('#developerTierPanel').addClass('white-panel').removeClass('blue-panel');
+        $('#developerTierHeader').addClass('white-header').removeClass('blue-header');
+        $('#switchToEnterprise').hide();
+
         $('#switchToFree').show();
         $('#switchToDeveloper').show();
       }
@@ -406,7 +434,7 @@ $(document).ready(function() {
   //  Stripe JS
   //////////////////////////////////////////////////////////////////////
   var handler = StripeCheckout.configure({
-    key: 'pk_test_6pRNASCoBOKtIshFeQd4XMUh',
+    key: 'pk_test_QrccwnKa5qKT2IxMPxRwykD9',
     // image: '/img/documentation/checkout/marketplace.png',
     locale: 'auto',
     zipCode: true,
@@ -414,24 +442,31 @@ $(document).ready(function() {
       // You can access the token ID with `token.id`.
       // Get the token ID to your server-side code for use.
       if(auth0Profile){
-        alert('tokenId is ' + token.id);
-        alert('userEmail is ' + auth0Profile.email);
-        alert('subscription is ' + 'developerTier')
+        // alert('tokenId is ' + token.id);
+        // console.log('tokenId is ' + token.id);
+        // alert('userEmail is ' + auth0Profile.email);
+        // alert('subscription is ' + 'developerTier')
+        $('#subscriptionsPageLoader').show();
         $.ajax({
-          url: 'http://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id + '/subscription',
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id + '/subscription',
           dataType: 'json',
           data: {
             "tokenId": token.id,
             "userEmail": auth0Profile.email,
-            "subscription": "developerTier"
+            "subscription": subscriptionName
           },
           type: 'PUT'
-        }).then(function(data, textStatus, jqXHR) {
+        }).done(function(data, textStatus, jqXHR) {
           // console.log(data);
           console.log('Successfully sent Stripe data to server');
           console.log(data);
+          $('#subscriptionsPageLoader').hide();
+          org.subscription = subscriptionName;
+          populateSubscriptionsPage();
 
-        }, function() {
+        }).fail(function() {
+          $('#subscriptionsPageLoader').hide();
+          gritterWrapper('API Error', "API call failed while trying to send Stripe data to server", "red-x-200px.png");
           console.log("API call failed while trying to send Stripe data to server");
         });
       }
@@ -443,6 +478,8 @@ $(document).ready(function() {
 
   $('.upgradeButton').on('click', function(e) {
     if($(this).attr('id') == 'switchToDeveloper'){
+      // Update global variable
+      subscriptionName = 'developerTier';
       // Open Checkout with further options:
       handler.open({
         name: 'DNSReRoute.xyz',
@@ -451,6 +488,8 @@ $(document).ready(function() {
       });
     }
     else if($(this).attr('id') == 'switchToEnterprise'){
+      // Update global variable
+      subscriptionName = 'enterpriseTier';
       // Open Checkout with further options:
       handler.open({
         name: 'DNSReRoute.xyz',
@@ -459,6 +498,8 @@ $(document).ready(function() {
       });
     }
     else if($(this).attr('id') == 'switchToFree'){
+      // Update global variable
+      subscriptionName = 'freeTier';
       // Open Checkout with further options:
       handler.open({
         name: 'DNSReRoute.xyz',
