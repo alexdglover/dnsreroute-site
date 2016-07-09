@@ -39,11 +39,12 @@ $(document).ready(function() {
         auth0Profile = profile;
         console.log("auth0Profile is: ", auth0Profile)
 
+        // If this is a net new user, create a record in the users collection
         registerNewUser();
 
         displayAdminPanel();
 
-        setUserAndOrg(function(){
+        setUser(function(){
           setOrg(function(){
             populateDashboard();
           })
@@ -82,7 +83,7 @@ $(document).ready(function() {
       });
     });
 
-    function setUserAndOrg(callback){
+    function setUser(callback){
       if(typeof auth0Profile !== 'undefined'){
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
@@ -267,6 +268,13 @@ $(document).ready(function() {
         }).then(function(data, textStatus, jqXHR) {
           console.log('User successfully added to users collection');
           console.log(data);
+
+          // Now that the user record exists, set user and org elements
+          setUser(function(){
+            setOrg(function(){
+              populateDashboard();
+            })
+          });
         }, function() {
           console.log("Failed to add user to users collection");
         });
