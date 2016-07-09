@@ -239,7 +239,7 @@ $(document).ready(function() {
       if (localStorage.getItem('id_token') !== null) {
         localStorage.removeItem('id_token');
       }
-      window.location.href = 'dnsreroute-console.html';
+      window.location.href = 'index.html';
     })
 
 
