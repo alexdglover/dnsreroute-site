@@ -21,8 +21,9 @@ $(document).ready(function() {
 
     if (hash) {
       if (hash.error) {
+        // Log the error quietly - if a non-logged in user browses to the page
+        // hash.error will be present
         console.log("There was an error logging in", hash.error);
-        alert('There was an error: ' + hash.error + '\n' + hash.error_description);
       } else {
         //save the token in the session:
         localStorage.setItem('id_token', hash.id_token);
