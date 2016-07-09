@@ -395,8 +395,8 @@ $(document).ready(function() {
         $('#switchToDeveloper').show();
       }
       else{
-        console.log('Error recognizing org.subscription, value is:')
-        console.log(org.subscription)
+        console.log('Error recognizing org.subscription, value is:');
+        console.log(org.subscription);
       }
       console.log('Leaving populateSubscriptionsPage function');
     }
