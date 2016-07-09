@@ -393,6 +393,10 @@ $(document).ready(function() {
         $('#switchToFree').show();
         $('#switchToDeveloper').show();
       }
+      else{
+        console.log('Error recognizing org.subscription, value is:')
+        console.log(org.subscription)
+      }
     }
 
     function hideAllPages(){
