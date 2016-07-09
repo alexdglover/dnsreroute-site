@@ -343,6 +343,7 @@ $(document).ready(function() {
     }
 
     function populateSubscriptionsPage(){
+      console.log('Starting populateSubscriptionsPage function');
       hideAllPages();
       $('#subscriptionsPage').show();
       if(org.subscription == 'freeTier'){
@@ -397,6 +398,7 @@ $(document).ready(function() {
         console.log('Error recognizing org.subscription, value is:')
         console.log(org.subscription)
       }
+      console.log('Leaving populateSubscriptionsPage function');
     }
 
     function hideAllPages(){
