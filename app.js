@@ -344,9 +344,12 @@ $(document).ready(function() {
 
     function populateSubscriptionsPage(){
       console.log('Starting populateSubscriptionsPage function');
+      console.log('org.subscription value is:');
+      console.log(org.subscription);
       hideAllPages();
       $('#subscriptionsPage').show();
       if(org.subscription == 'freeTier'){
+        console.log('Starting freeTier block');
         $('#freeTierSelected').show();
         $('#freeTierPanel').addClass('blue-panel').removeClass('white-panel');
         $('#freeTierHeader').addClass('blue-header').removeClass('white-header');
@@ -361,6 +364,8 @@ $(document).ready(function() {
 
         $('#switchToDeveloper').show();
         $('#switchToEnterprise').show();
+
+        console.log('Leaving freeTier block');
       }
       else if(org.subscription == 'developerTier'){
         $('#developerTierSelected').show();
