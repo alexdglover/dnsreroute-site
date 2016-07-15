@@ -50,16 +50,8 @@ $(document).ready(function() {
           })
         });
 
-        // populateDashboard();
-
       });
     }
-
-    $('#fake-login').click(function(e) {
-      e.preventDefault();
-      displayAdminPanel();
-      populateDashboard();
-    });
 
     $.ajaxSetup({
       'beforeSend': function(xhr) {
@@ -70,18 +62,47 @@ $(document).ready(function() {
       }
     });
 
-    $('.btn-api').click(function(e) {
-      // Just call your API here. The header will be sent
+
+    function registerNewUser(){
+      console.log('registerNewUser function triggered');
       $.ajax({
-        url: 'http://localhost:3001/secured/ping',
+        url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+        dataType: 'json',
         type: 'GET'
       }).then(function(data, textStatus, jqXHR) {
-        alert("API endpoint responded with " + data);
-        //alert("The request to the secured enpoint was successfull");
+        console.log('User already exists');
+        console.log(data);
       }, function() {
-        alert("You need to download the server seed and start it to call this API");
+        console.log("User doesn't exist locally yet, adding it to users collection");
+
+
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
+          dataType: 'json',
+          type: 'POST',
+          data: {
+            'userEmail': auth0Profile.email,
+            userName: auth0Profile.email,
+            subscription: 'freeTier'
+          }
+        }).then(function(data, textStatus, jqXHR) {
+          console.log('User successfully added to users collection');
+          console.log(data);
+
+          // Now that the user record exists, set user and org elements
+          setUser(function(){
+            setOrg(function(){
+              populateDashboard();
+            })
+          });
+        }, function() {
+          console.log("Failed to add user to users collection");
+        });
+
+
       });
-    });
+    }
+
 
     function setUser(callback){
       if(typeof auth0Profile !== 'undefined'){
@@ -124,6 +145,111 @@ $(document).ready(function() {
       else{
         alert('Global var user not set yet')
       }
+    }
+
+    //////////////////////////////////////////
+    // API functions
+    //////////////////////////////////////////
+
+    function deleteRoute(incomingRoute){
+      console.log('deleteRoute function triggered');
+      console.log(incomingRoute);
+      if(auth0Profile){
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/' + incomingRoute,
+          dataType: 'json',
+          type: 'DELETE'
+        }).then(function(data, textStatus, jqXHR) {
+          console.log('Successfully deleted route ' + incomingRoute);
+          getRoutesPanel();
+        }, function() {
+          console.log("API call failed");
+        });
+
+      }
+      else {
+        console.log('No user profile object - please sign in');
+      }
+    }
+
+    function createRoute(){
+      console.log('createRoute function triggered');
+      // var incomingRoute = $(this).attr('id');
+      if(auth0Profile){
+        formData = $('#addRouteForm').serialize();
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes',
+          dataType: 'json',
+          data: formData,
+          type: 'POST'
+        }).done(function(data, textStatus, jqXHR) {
+          // console.log(data);
+          console.log('Successfully created route');
+          console.log(data);
+          $('#addRouteForm').find("input[type=text]").val("");
+          gritterWrapper('Created route', "You're new route was created successfully!", 'green-check-200px.png');
+          getRoutesPanel();
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          var responseJSON = JSON.parse(jqXHR.responseText);
+          if(responseJSON['message'] == 'Failed to add route - that incoming DNS name is already in use'){
+            // alert('That incoming route is already in use. Please use a different incoming DNS name.');
+            gritterWrapper('Failed to create route', "That incoming route is already in use. Please use a different incoming DNS name.", 'red-x-200px.png');
+          }
+          else{
+            alert('Error when calling backend API')
+          }
+        })
+      }
+      else {
+        alert('No session information - please sign in first.')
+      }
+    }
+
+    function addUserToOrg(){
+      console.log('addUserToOrg function triggered');
+      if(auth0Profile){
+        formData = $('#addUserToOrgForm').serialize();
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
+          dataType: 'json',
+          data: formData,
+          type: 'POST'
+        }).done(function(data, textStatus, jqXHR) {
+          // console.log(data);
+          console.log('Successfully added user');
+          console.log(data);
+          $('#addUserToOrgForm').find("input[type=text]").val("");
+          gritterWrapper('Add user to org', "The user was added to your org! Users will still need to register on initial login", 'green-check-200px.png');
+          populateOrgPanel();
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          var responseJSON = JSON.parse(jqXHR.responseText);
+          if(responseJSON['message'] == 'User with that email already exists'){
+            gritterWrapper('Failed to add user to org!', "That email address is already registered. Please try a different address or have the user cancel their current account.", 'red-x-200px.png');
+          }
+          else{
+            gritterWrapper('Failed to add user to org!', "Something went wrong when adding the user!", 'red-x-200px.png');
+            console.log('Error is: ' + errorThrown);
+            console.log('Server response is: ' + responseJSON['message']);
+          }
+
+        })
+      }
+      else {
+        alert('No session information - please sign in first.')
+      }
+    }
+
+    //////////////////////////////////////////
+    // End of API functions
+    //////////////////////////////////////////
+
+    //////////////////////////////////////////
+    // Page population functions
+    //////////////////////////////////////////
+
+    function displayAdminPanel(){
+      $('#welcome').hide();
+      $('#pageFrame').show();
     }
 
     function getRoutesPanel(){
@@ -202,15 +328,11 @@ $(document).ready(function() {
       }
     }
 
-    function displayAdminPanel(){
-      $('#welcome').hide();
-      $('#pageFrame').show();
-    }
-
     function populateDashboard(){
       // for production, the conditional should be here
       // if(typeof profile !== 'undefined'){
-      $('#dashboardPage').show();
+      hideAllPages();
+      $('#dashboardPage').fadeIn();
       if(typeof auth0Profile !== 'undefined'){
         $('#profile-nickname').text(auth0Profile.nickname);
         $('.nickname').text(auth0Profile.name);
@@ -228,128 +350,20 @@ $(document).ready(function() {
 
         getRoutesPanel();
         populateBillingPanel();
+        populateOrgPanel();
       }
       else {
         alert('No session information - please sign in first.')
       }
 
-    }
-
-    $('.signout').click(function(){
-      if (localStorage.getItem('id_token') !== null) {
-        localStorage.removeItem('id_token');
-      }
-      window.location.href = 'index.html';
-    })
-
-
-    function registerNewUser(){
-      console.log('registerNewUser function triggered');
-      $.ajax({
-        url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
-        dataType: 'json',
-        type: 'GET'
-      }).then(function(data, textStatus, jqXHR) {
-        console.log('User already exists');
-        console.log(data);
-      }, function() {
-        console.log("User doesn't exist locally yet, adding it to users collection");
-
-
-        $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
-          dataType: 'json',
-          type: 'POST',
-          data: {
-            'userEmail': auth0Profile.email,
-            userName: auth0Profile.email,
-            subscription: 'freeTier'
-          }
-        }).then(function(data, textStatus, jqXHR) {
-          console.log('User successfully added to users collection');
-          console.log(data);
-
-          // Now that the user record exists, set user and org elements
-          setUser(function(){
-            setOrg(function(){
-              populateDashboard();
-            })
-          });
-        }, function() {
-          console.log("Failed to add user to users collection");
-        });
-
-
-      });
-    }
-
-    function deleteRoute(incomingRoute){
-      console.log('deleteRoute function triggered');
-      console.log(incomingRoute);
-      if(auth0Profile){
-        $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/' + incomingRoute,
-          dataType: 'json',
-          type: 'DELETE'
-        }).then(function(data, textStatus, jqXHR) {
-          console.log('Successfully deleted route ' + incomingRoute);
-          getRoutesPanel();
-        }, function() {
-          console.log("API call failed");
-        });
-
-      }
-      else {
-        console.log('No user profile object - please sign in');
-      }
-    }
-
-    function createRoute(){
-      console.log('createRoute function triggered');
-      // var incomingRoute = $(this).attr('id');
-      if(auth0Profile){
-        formData = $('#addRouteForm').serialize();
-        $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes',
-          dataType: 'json',
-          data: formData,
-          type: 'POST'
-        }).done(function(data, textStatus, jqXHR) {
-          // console.log(data);
-          console.log('Successfully created route');
-          console.log(data);
-          $('#addRouteForm').find("input[type=text]").val("");
-          gritterWrapper('Created route', "You're new route was created successfully!", 'green-check-200px.png');
-          getRoutesPanel();
-        }).fail(function(jqXHR, textStatus, errorThrown){
-          var responseJSON = JSON.parse(jqXHR.responseText);
-          if(responseJSON['message'] == 'Failed to add route - that incoming DNS name is already in use'){
-            // alert('That incoming route is already in use. Please use a different incoming DNS name.');
-            gritterWrapper('Failed to create route', "That incoming route is already in use. Please use a different incoming DNS name.", 'red-x-200px.png');
-          }
-          else{
-            alert('Error when calling backend API')
-          }
-        })
-
-        // }, function() {
-        //   if
-        //   console.log("API call failed");
-        // });
-      }
-      else {
-        alert('No session information - please sign in first.')
-      }
     }
 
     function populateSubscriptionsPage(){
-      console.log('Starting populateSubscriptionsPage function');
       console.log('org.subscription value is:');
       console.log(org.subscription);
       hideAllPages();
-      $('#subscriptionsPage').show();
+      $('#subscriptionsPage').fadeIn();
       if(org.subscription == 'freeTier'){
-        console.log('Starting freeTier block');
         $('#freeTierSelected').show();
         $('#freeTierPanel').addClass('blue-panel').removeClass('white-panel');
         $('#freeTierHeader').addClass('blue-header').removeClass('white-header');
@@ -364,8 +378,6 @@ $(document).ready(function() {
 
         $('#switchToDeveloper').show();
         $('#switchToEnterprise').show();
-
-        console.log('Leaving freeTier block');
       }
       else if(org.subscription == 'developerTier'){
         $('#developerTierSelected').show();
@@ -409,17 +421,80 @@ $(document).ready(function() {
     function hideAllPages(){
       $('#welcome').hide();
       $('#dashboardPage').hide();
+      $('#subscriptionsPage').hide();
+    }
+
+    function populateOrgPanel(){
+      if(org.subscription == 'freeTier'){
+        $('#noOrgMgmtWarning').fadeIn();
+      }
+      else{
+        $('#orgMgmtSection').fadeIn();
+
+        $('#dashboardRoutesTable').html('');
+        $('#dashboardRoutesTableLoader').show();
+        if(auth0Profile){
+          $.ajax({
+            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/byOrg/' + org._id,
+            dataType: 'json',
+            type: 'GET'
+          }).then(function(data, textStatus, jqXHR) {
+            // console.log(data);
+            $('#dashboardOrgUsersTableLoader').hide();
+            var tableContent = '';
+            $.each(data, function(i, user){
+              // console.log("This route is: ", route)
+              tableContent += '<tr>';
+              tableContent += '<td>';
+              tableContent += user.userName;
+              tableContent += '</td>';
+              tableContent += '<td>';
+              tableContent += user.userEmail;
+              tableContent += '</td>';
+              tableContent += '<td style="min-width: 100px;"><button class="btn btn-success btn-xs" style="margin-right: 3px;"><i class="fa fa-check"></i></button><button class="btn btn-primary btn-xs" style="margin-right: 3px;"><i class="fa fa-pencil"></i></button><button class="btn btn-danger btn-xs deleteUser" userEmail="' + user.userEmail + '"><i class="fa fa-trash-o "></i></button></td>';
+              tableContent += '</tr>';
+            });
+
+            $(document).off('click', '.deleteUser');
+            $(document).on('click', '.deleteUser', function(){
+              deleteUser(
+                $(this).attr('userEmail')
+              )
+            });
+
+            $('#dashboardOrgUsersTable').html(tableContent);
+            // Re-initialize the dataTable
+            $('#orgUsersTable').DataTable();
+
+          }, function() {
+            console.log("API call failed");
+          });
+        }
+        else {
+          alert('No session information - please sign in first.')
+          $('#dashboardOrgUsersTableLoader').hide();
+          // Re-initialize the dataTable
+          $('#orgUsersTable').DataTable();
+        }
+
+      }
+
     }
 
 
-
-    // Bindings
+    //////////////////////////////////////////
+    // Button binding functions
+    //////////////////////////////////////////
     $('#dashboardRoutesRefresh').click(function(){
       getRoutesPanel()
     })
 
     $('#addRouteBtn').click(function(){
-      createRoute()
+      createRoute();
+    })
+
+    $('#navDashboard').click(function(){
+      populateDashboard();
     })
 
     $('#navSubscriptions').click(function(){
@@ -431,6 +506,27 @@ $(document).ready(function() {
       $('#navSubscriptions').addClass('active');
       populateSubscriptionsPage();
     })
+
+    $('.signout').click(function(){
+      if (localStorage.getItem('id_token') !== null) {
+        localStorage.removeItem('id_token');
+      }
+      window.location.href = 'index.html';
+    })
+
+    $('#fake-login').click(function(e) {
+      e.preventDefault();
+      displayAdminPanel();
+      populateDashboard();
+    });
+
+    $('#addUserToOrgBtn').click(function(){
+      addUserToOrg()
+    })
+
+    //////////////////////////////////////////
+    // End of Button binding functions
+    //////////////////////////////////////////
 
     function gritterWrapper(title, text, image){
       var unique_id = $.gritter.add({
@@ -540,4 +636,4 @@ $(document).ready(function() {
 
 
 
-}); //End of document.ready block?
+}); //End of document.ready block
