@@ -74,16 +74,21 @@ $(document).ready(function() {
         console.log(data);
       }, function() {
         console.log("User doesn't exist locally yet, adding it to users collection");
-
+        if(typeof(auth0Profile.name) == 'string'){
+          auth0ProfileUserName = auth0Profile.name;
+        }
+        else{
+          // Fall back to email for username if necessary
+          auth0ProfileUserName = auth0Profile.email;
+        }
 
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/register',
           dataType: 'json',
           type: 'POST',
           data: {
             'userEmail': auth0Profile.email,
-            userName: auth0Profile.email,
-            subscription: 'freeTier'
+            'userName': auth0Profile.name
           }
         }).then(function(data, textStatus, jqXHR) {
           console.log('User successfully added to users collection');
@@ -114,7 +119,7 @@ $(document).ready(function() {
           console.log('getUser API call succeeded')
           console.log(data);
           user = data;
-          $('.requestorHiddenInput').val(data.orgId);
+          $('.requestorHiddenInput').val(data.userEmail);
           console.log('user is ' + user);
           callback();
         }, function() {
@@ -206,7 +211,6 @@ $(document).ready(function() {
           }).fail(function(jqXHR, textStatus, errorThrown){
             var responseJSON = JSON.parse(jqXHR.responseText);
             if(responseJSON['message'] == 'Failed to add route - that incoming DNS name is already in use'){
-              // alert('That incoming route is already in use. Please use a different incoming DNS name.');
               gritterWrapper('Failed to create route', "That incoming route is already in use. Please use a different incoming DNS name.", 'red-x-200px.png');
             }
             else{
@@ -253,6 +257,9 @@ $(document).ready(function() {
             if(responseJSON['message'] == 'User with that email already exists'){
               gritterWrapper('Failed to add user to org!', "That email address is already registered. Please try a different address or have the user cancel their current account.", 'red-x-200px.png');
             }
+            else if(errorThrown == 'FORBIDDEN'){
+              gritterWrapper('Unauthorized!', "You are not authorized to add a user to an organization", 'red-x-200px.png');
+            }
             else{
               gritterWrapper('Failed to add user to org!', "Something went wrong when adding the user!", 'red-x-200px.png');
               console.log('Error is: ' + errorThrown);
@@ -282,9 +289,14 @@ $(document).ready(function() {
           populateOrgPanel();
         }).fail(function() {
           $('#dashboardOrgUsersTableLoader').hide();
-          gritterWrapper('Failed to delete user!', "Something went wrong when deleting the user!", 'red-x-200px.png');
-          console.log('Error is: ' + errorThrown);
-          console.log('Server response is: ' + responseJSON['message']);
+          if(errorThrown == 'FORBIDDEN'){
+            gritterWrapper('Unauthorized!', "You are not authorized to add a user to an organization", 'red-x-200px.png');
+          }
+          else{
+            gritterWrapper('Failed to delete user!', "Something went wrong when deleting the user!", 'red-x-200px.png');
+            console.log('Error is: ' + errorThrown);
+            console.log('Server response is: ' + responseJSON['message']);
+          }
         });
       }
       else {
@@ -418,8 +430,7 @@ $(document).ready(function() {
       hideAllPages();
       $('#dashboardPage').fadeIn();
       if(typeof auth0Profile !== 'undefined'){
-        $('#profile-nickname').text(auth0Profile.nickname);
-        $('.nickname').text(auth0Profile.name);
+        $('#profile-nickname').text(auth0Profile.name);
         $('#profile-photo').attr('src', auth0Profile.picture);
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
@@ -513,6 +524,7 @@ $(document).ready(function() {
         $('#noOrgMgmtWarning').fadeIn();
       }
       else{
+        $('#noOrgMgmtWarning').hide();
         $('#orgMgmtSection').fadeIn();
         $('#orgNameInput').val(org.orgName);
         $('#orgNameSpan').text(org.orgName);
