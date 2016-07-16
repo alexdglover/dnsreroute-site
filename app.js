@@ -34,7 +34,7 @@ $(document).ready(function() {
     if (id_token) {
       lock.getProfile(id_token, function (err, profile) {
         if (err) {
-          return alert('There was an error geting the profile: ' + err.message);
+          return console.log('There was an error geting the profile: ' + err.message);
         }
         auth0Profile = profile;
         console.log("auth0Profile is: ", auth0Profile)
@@ -114,15 +114,15 @@ $(document).ready(function() {
           console.log('getUser API call succeeded')
           console.log(data);
           user = data;
+          $('.requestorHiddenInput').val(data.orgId);
           console.log('user is ' + user);
-          // setOrg();
           callback();
         }, function() {
           console.log("getUser API call failed");
         });
       }
       else{
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
       }
     }
 
@@ -136,6 +136,7 @@ $(document).ready(function() {
           console.log('getOrg API call succeeded')
           console.log(data);
           org = data;
+          $('.orgIdHiddenInput').val(data.orgId);
           console.log('org is ' + org);
           callback();
         }, function() {
@@ -143,7 +144,7 @@ $(document).ready(function() {
         });
       }
       else{
-        alert('Global var user not set yet')
+        console.log('Global var user not set yet')
       }
     }
 
@@ -155,14 +156,19 @@ $(document).ready(function() {
       console.log('deleteRoute function triggered');
       console.log(incomingRoute);
       if(auth0Profile){
+        $('#dashboardRoutesTableLoader').show();
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/' + incomingRoute,
           dataType: 'json',
           type: 'DELETE'
-        }).then(function(data, textStatus, jqXHR) {
+        }).done(function(data, textStatus, jqXHR) {
+          $('#dashboardRoutesTableLoader').hide();
+          gritterWrapper('Route deleted successfully!', 'Your route was deleted successfully', 'green-check-200px.png');
           console.log('Successfully deleted route ' + incomingRoute);
           getRoutesPanel();
-        }, function() {
+        }).fail(function() {
+          $('#dashboardRoutesTableLoader').hide();
+          gritterWrapper('API Error!', 'An error occurred while calling the API backend', 'red-x-200px.png');
           console.log("API call failed");
         });
 
@@ -217,35 +223,47 @@ $(document).ready(function() {
     function addUserToOrg(){
       console.log('addUserToOrg function triggered');
       if(auth0Profile){
-        formData = $('#addUserToOrgForm').serialize();
-        $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
-          dataType: 'json',
-          data: formData,
-          type: 'POST'
-        }).done(function(data, textStatus, jqXHR) {
-          // console.log(data);
-          console.log('Successfully added user');
-          console.log(data);
-          $('#addUserToOrgForm').find("input[type=text]").val("");
-          $('#addUserToOrgForm').find("input[type=email]").val("");
-          gritterWrapper('Add user to org', "The user was added to your org! Users will still need to register on initial login", 'green-check-200px.png');
-          populateOrgPanel();
-        }).fail(function(jqXHR, textStatus, errorThrown){
-          var responseJSON = JSON.parse(jqXHR.responseText);
-          if(responseJSON['message'] == 'User with that email already exists'){
-            gritterWrapper('Failed to add user to org!', "That email address is already registered. Please try a different address or have the user cancel their current account.", 'red-x-200px.png');
-          }
-          else{
-            gritterWrapper('Failed to add user to org!', "Something went wrong when adding the user!", 'red-x-200px.png');
-            console.log('Error is: ' + errorThrown);
-            console.log('Server response is: ' + responseJSON['message']);
-          }
+        var $myForm = $('#addUserToOrgForm')
+        if (!$myForm[0].checkValidity()) {
+          // If the form is invalid, submit it. The form won't actually submit;
+          // this will just cause the browser to display the native HTML5 error messages.
+          gritterWrapper('Invalid user data!', 'Please check your inputs, either the name or email you entered is invalid', 'red-x-200px.png');
+          $('<input type="submit">').hide().appendTo($myForm).click().remove();
+        }
+        else {
+          $('#dashboardOrgUsersTableLoader').show();
+          formData = $('#addUserToOrgForm').serialize();
+          $.ajax({
+            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
+            dataType: 'json',
+            data: formData,
+            type: 'POST'
+          }).done(function(data, textStatus, jqXHR) {
+            // console.log(data);
+            console.log('Successfully added user');
+            console.log(data);
+            $('#addUserToOrgForm').find("input[type=text]").val("");
+            $('#addUserToOrgForm').find("input[type=email]").val("");
+            $('#dashboardOrgUsersTableLoader').hide();
+            gritterWrapper('Add user to org', "The user was added to your org! Users will still need to register on initial login", 'green-check-200px.png');
+            populateOrgPanel();
+          }).fail(function(jqXHR, textStatus, errorThrown){
+            $('#dashboardOrgUsersTableLoader').hide();
+            var responseJSON = JSON.parse(jqXHR.responseText);
+            if(responseJSON['message'] == 'User with that email already exists'){
+              gritterWrapper('Failed to add user to org!', "That email address is already registered. Please try a different address or have the user cancel their current account.", 'red-x-200px.png');
+            }
+            else{
+              gritterWrapper('Failed to add user to org!', "Something went wrong when adding the user!", 'red-x-200px.png');
+              console.log('Error is: ' + errorThrown);
+              console.log('Server response is: ' + responseJSON['message']);
+            }
 
-        })
+          })
+        } // End of form validation else statement
       }
       else {
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
       }
     }
 
@@ -253,14 +271,17 @@ $(document).ready(function() {
       console.log('deleteUser function triggered');
       console.log(userEmail);
       if(auth0Profile){
+        $('#dashboardOrgUsersTableLoader').show();
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail,
           dataType: 'json',
           type: 'DELETE'
         }).done(function(data, textStatus, jqXHR) {
+          $('#dashboardOrgUsersTableLoader').hide();
           gritterWrapper('Successfully deleted user ', 'Successfully deleted user ' + userEmail, 'green-check-200px.png');
           populateOrgPanel();
         }).fail(function() {
+          $('#dashboardOrgUsersTableLoader').hide();
           gritterWrapper('Failed to delete user!', "Something went wrong when deleting the user!", 'red-x-200px.png');
           console.log('Error is: ' + errorThrown);
           console.log('Server response is: ' + responseJSON['message']);
@@ -275,39 +296,30 @@ $(document).ready(function() {
       console.log('updateOrg function triggered');
       // var incomingRoute = $(this).attr('id');
       if(auth0Profile){
-        var $myForm = $('#updateOrgNameForm')
-        if (!$myForm[0].checkValidity()) {
-          // If the form is invalid, submit it. The form won't actually submit;
-          // this will just cause the browser to display the native HTML5 error messages.
-          gritterWrapper('Invalid input!', 'Please check your inputs, one of your URLs are invalid', 'red-x-200px.png');
-          $('<input type="submit">').hide().appendTo($myForm).click().remove();
-        }
-        else {
-          $('#dashboardOrgUsersTableLoader').show();
-          formData = $('#updateOrgNameForm').serialize();
-          $.ajax({
-            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id,
-            dataType: 'json',
-            data: formData,
-            type: 'PUT'
-          }).done(function(data, textStatus, jqXHR) {
-            // console.log(data);
-            $('#dashboardOrgUsersTableLoader').hide();
-            console.log('Successfully updated org');
-            console.log(data);
-            $('#updateOrgNameForm').slideUp();
-            gritterWrapper('Updated org', "Your org name was updated successfully!", 'green-check-200px.png');
-            org.orgName = $('#orgNameInput').val();
-            populateOrgPanel();
-          }).fail(function(jqXHR, textStatus, errorThrown){
-            $('#dashboardOrgUsersTableLoader').hide();
-            var responseJSON = JSON.parse(jqXHR.responseText);
-            gritterWrapper('Failed to update org', "There was an error while updating your org name, error message" + responseJSON['message'], 'red-x-200px.png');
-          })
-        } // End of form validation else statement
+        $('#dashboardOrgUsersTableLoader').show();
+        formData = $('#updateOrgNameForm').serialize();
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id,
+          dataType: 'json',
+          data: formData,
+          type: 'PUT'
+        }).done(function(data, textStatus, jqXHR) {
+          // console.log(data);
+          $('#dashboardOrgUsersTableLoader').hide();
+          console.log('Successfully updated org');
+          console.log(data);
+          $('#updateOrgNameForm').slideUp();
+          gritterWrapper('Updated org', "Your org name was updated successfully!", 'green-check-200px.png');
+          org.orgName = $('#orgNameInput').val();
+          populateOrgPanel();
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          $('#dashboardOrgUsersTableLoader').hide();
+          var responseJSON = JSON.parse(jqXHR.responseText);
+          gritterWrapper('Failed to update org', "There was an error while updating your org name, error message" + responseJSON['message'], 'red-x-200px.png');
+        })
       }
       else {
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
       }
     }
 
@@ -373,7 +385,7 @@ $(document).ready(function() {
         });
       }
       else {
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
         $('#dashboardRoutesTableLoader').hide();
         // Re-initialize the dataTable
         $('#routesDataTable').DataTable();
@@ -396,7 +408,7 @@ $(document).ready(function() {
         });
       }
       else{
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
       }
     }
 
@@ -425,7 +437,7 @@ $(document).ready(function() {
         populateOrgPanel();
       }
       else {
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
       }
 
     }
@@ -545,7 +557,7 @@ $(document).ready(function() {
           });
         }
         else {
-          alert('No session information - please sign in first.')
+          gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
           $('#dashboardOrgUsersTableLoader').hide();
           // Re-initialize the dataTable
           $('#orgUsersTable').DataTable();
@@ -640,10 +652,6 @@ $(document).ready(function() {
       // You can access the token ID with `token.id`.
       // Get the token ID to your server-side code for use.
       if(auth0Profile){
-        // alert('tokenId is ' + token.id);
-        // console.log('tokenId is ' + token.id);
-        // alert('userEmail is ' + auth0Profile.email);
-        // alert('subscription is ' + 'developerTier')
         $('#subscriptionsPageLoader').show();
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id + '/subscription',
@@ -669,7 +677,7 @@ $(document).ready(function() {
         });
       }
       else {
-        alert('No session information - please sign in first.')
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
       }
     }
   });
