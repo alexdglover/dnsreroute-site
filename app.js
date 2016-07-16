@@ -292,10 +292,10 @@ $(document).ready(function() {
           $('#dashboardOrgUsersTableLoader').hide();
           gritterWrapper('Successfully deleted user ', 'Successfully deleted user ' + userEmail, 'green-check-200px.png');
           populateOrgPanel();
-        }).fail(function() {
+        }).fail(function(jqXHR, textStatus, errorThrown) {
           $('#dashboardOrgUsersTableLoader').hide();
           if(errorThrown == 'FORBIDDEN'){
-            gritterWrapper('Unauthorized!', "You are not authorized to add a user to an organization", 'red-x-200px.png');
+            gritterWrapper('Unauthorized!', "You are not authorized to delete that user, either because it is your own account or a user account associated with a different org", 'red-x-200px.png');
           }
           else{
             gritterWrapper('Failed to delete user!', "Something went wrong when deleting the user!", 'red-x-200px.png');
