@@ -74,8 +74,8 @@ $(document).ready(function() {
         console.log(data);
       }, function() {
         console.log("User doesn't exist locally yet, adding it to users collection");
-        if(typeof(auth0Profile.name) == 'string'){
-          auth0ProfileUserName = auth0Profile.name;
+        if(typeof(auth0Profile.nickname) == 'string'){
+          auth0ProfileUserName = auth0Profile.nickname;
         }
         else{
           // Fall back to email for username if necessary
@@ -430,7 +430,7 @@ $(document).ready(function() {
       hideAllPages();
       $('#dashboardPage').fadeIn();
       if(typeof auth0Profile !== 'undefined'){
-        $('#profile-nickname').text(auth0Profile.name);
+        $('#profile-nickname').text(auth0Profile.nickname);
         $('#profile-photo').attr('src', auth0Profile.picture);
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
