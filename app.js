@@ -183,8 +183,8 @@ $(document).ready(function() {
       }
     }
 
-    function createRoute(){
-      console.log('createRoute function triggered');
+    function addRoute(){
+      console.log('addRoute function triggered');
       // var incomingRoute = $(this).attr('id');
       if(auth0Profile){
         var $myForm = $('#addRouteForm')
@@ -213,8 +213,11 @@ $(document).ready(function() {
             if(responseJSON['message'] == 'Failed to add route - that incoming DNS name is already in use'){
               gritterWrapper('Failed to create route', "That incoming route is already in use. Please use a different incoming DNS name.", 'red-x-200px.png');
             }
+            else if(errorThrown == 'FORBIDDEN'){
+              gritterWrapper('Unauthorized!', "You are not authorized to create more routes. Please refer to your subscription limits", 'red-x-200px.png');
+            }
             else{
-              alert('Error when calling backend API')
+              gritterWrapper('API Error!','Error when calling backend API', 'red-x-200px.png');
             }
           })
         } // End of form validation else statement
@@ -280,8 +283,10 @@ $(document).ready(function() {
       if(auth0Profile){
         $('#dashboardOrgUsersTableLoader').show();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail + '/' + auth0Profile.email,
+          // contentType: "application/json; charset=utf-8",
           dataType: 'json',
+          // data: { "requestorEmail": auth0Profile.email },
           type: 'DELETE'
         }).done(function(data, textStatus, jqXHR) {
           $('#dashboardOrgUsersTableLoader').hide();
@@ -588,7 +593,7 @@ $(document).ready(function() {
     })
 
     $('#addRouteBtn').click(function(){
-      createRoute();
+      addRoute();
     })
 
     $('#navDashboard').click(function(){
