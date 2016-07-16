@@ -25,7 +25,7 @@
 .gritter-item-wrapper {
 	position:relative;
 	margin:0 0 10px 0;
-	background:url('../images/ie-spacer.gif'); /* ie7/8 fix */ 
+	background:url('../images/ie-spacer.gif'); /* ie7/8 fix */
 }
 .gritter-top {
 	background:url(../images/gritter.png) no-repeat left -30px;
@@ -47,8 +47,8 @@
 	background:url(../images/gritter.png) no-repeat left -40px;
 	color:#eee;
 	padding:2px 11px 8px 11px;
-	font-size: 11px;
-	font-family:verdana;
+	font-size: 14px;
+	font-family: 'Ruda', verdana, sans-serif;
 }
 .hover .gritter-item {
 	background-position:right -40px;
@@ -70,7 +70,7 @@
 	text-indent:-9999em;
 }
 .gritter-title {
-	font-size:14px;
+	font-size:16px;
 	font-weight:bold;
 	padding:0 0 7px 0;
 	display:block;
