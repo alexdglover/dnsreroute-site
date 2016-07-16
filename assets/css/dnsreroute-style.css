@@ -2343,9 +2343,6 @@ label {
   transform: translateZ(0);
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
-  position: absolute;
-  top: -7%;
-  left: 45%;
 }
 .loader:before {
   left: -3.5em;
