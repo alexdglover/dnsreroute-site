@@ -176,29 +176,38 @@ $(document).ready(function() {
       console.log('createRoute function triggered');
       // var incomingRoute = $(this).attr('id');
       if(auth0Profile){
-        formData = $('#addRouteForm').serialize();
-        $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes',
-          dataType: 'json',
-          data: formData,
-          type: 'POST'
-        }).done(function(data, textStatus, jqXHR) {
-          // console.log(data);
-          console.log('Successfully created route');
-          console.log(data);
-          $('#addRouteForm').find("input[type=text]").val("");
-          gritterWrapper('Created route', "You're new route was created successfully!", 'green-check-200px.png');
-          getRoutesPanel();
-        }).fail(function(jqXHR, textStatus, errorThrown){
-          var responseJSON = JSON.parse(jqXHR.responseText);
-          if(responseJSON['message'] == 'Failed to add route - that incoming DNS name is already in use'){
-            // alert('That incoming route is already in use. Please use a different incoming DNS name.');
-            gritterWrapper('Failed to create route', "That incoming route is already in use. Please use a different incoming DNS name.", 'red-x-200px.png');
-          }
-          else{
-            alert('Error when calling backend API')
-          }
-        })
+        var $myForm = $('#addRouteForm')
+        if (!$myForm[0].checkValidity()) {
+          // If the form is invalid, submit it. The form won't actually submit;
+          // this will just cause the browser to display the native HTML5 error messages.
+          gritterWrapper('Invalid input!', 'Please check your inputs, one of your URLs are invalid', 'red-x-200px.png');
+          $('<input type="submit">').hide().appendTo($myForm).click().remove();
+        }
+        else {
+          formData = $('#addRouteForm').serialize();
+          $.ajax({
+            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes',
+            dataType: 'json',
+            data: formData,
+            type: 'POST'
+          }).done(function(data, textStatus, jqXHR) {
+            // console.log(data);
+            console.log('Successfully created route');
+            console.log(data);
+            $('#addRouteForm').find("input[type=text]").val("");
+            gritterWrapper('Created route', "You're new route was created successfully!", 'green-check-200px.png');
+            getRoutesPanel();
+          }).fail(function(jqXHR, textStatus, errorThrown){
+            var responseJSON = JSON.parse(jqXHR.responseText);
+            if(responseJSON['message'] == 'Failed to add route - that incoming DNS name is already in use'){
+              // alert('That incoming route is already in use. Please use a different incoming DNS name.');
+              gritterWrapper('Failed to create route', "That incoming route is already in use. Please use a different incoming DNS name.", 'red-x-200px.png');
+            }
+            else{
+              alert('Error when calling backend API')
+            }
+          })
+        } // End of form validation else statement
       }
       else {
         alert('No session information - please sign in first.')
@@ -219,6 +228,7 @@ $(document).ready(function() {
           console.log('Successfully added user');
           console.log(data);
           $('#addUserToOrgForm').find("input[type=text]").val("");
+          $('#addUserToOrgForm').find("input[type=email]").val("");
           gritterWrapper('Add user to org', "The user was added to your org! Users will still need to register on initial login", 'green-check-200px.png');
           populateOrgPanel();
         }).fail(function(jqXHR, textStatus, errorThrown){
@@ -233,6 +243,68 @@ $(document).ready(function() {
           }
 
         })
+      }
+      else {
+        alert('No session information - please sign in first.')
+      }
+    }
+
+    function deleteUser(userEmail){
+      console.log('deleteUser function triggered');
+      console.log(userEmail);
+      if(auth0Profile){
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail,
+          dataType: 'json',
+          type: 'DELETE'
+        }).done(function(data, textStatus, jqXHR) {
+          gritterWrapper('Successfully deleted user ', 'Successfully deleted user ' + userEmail, 'green-check-200px.png');
+          populateOrgPanel();
+        }).fail(function() {
+          gritterWrapper('Failed to delete user!', "Something went wrong when deleting the user!", 'red-x-200px.png');
+          console.log('Error is: ' + errorThrown);
+          console.log('Server response is: ' + responseJSON['message']);
+        });
+      }
+      else {
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
+      }
+    }
+
+    function updateOrg(){
+      console.log('updateOrg function triggered');
+      // var incomingRoute = $(this).attr('id');
+      if(auth0Profile){
+        var $myForm = $('#updateOrgNameForm')
+        if (!$myForm[0].checkValidity()) {
+          // If the form is invalid, submit it. The form won't actually submit;
+          // this will just cause the browser to display the native HTML5 error messages.
+          gritterWrapper('Invalid input!', 'Please check your inputs, one of your URLs are invalid', 'red-x-200px.png');
+          $('<input type="submit">').hide().appendTo($myForm).click().remove();
+        }
+        else {
+          $('#dashboardOrgUsersTableLoader').show();
+          formData = $('#updateOrgNameForm').serialize();
+          $.ajax({
+            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id,
+            dataType: 'json',
+            data: formData,
+            type: 'PUT'
+          }).done(function(data, textStatus, jqXHR) {
+            // console.log(data);
+            $('#dashboardOrgUsersTableLoader').hide();
+            console.log('Successfully updated org');
+            console.log(data);
+            $('#updateOrgNameForm').slideUp();
+            gritterWrapper('Updated org', "Your org name was updated successfully!", 'green-check-200px.png');
+            org.orgName = $('#orgNameInput').val();
+            populateOrgPanel();
+          }).fail(function(jqXHR, textStatus, errorThrown){
+            $('#dashboardOrgUsersTableLoader').hide();
+            var responseJSON = JSON.parse(jqXHR.responseText);
+            gritterWrapper('Failed to update org', "There was an error while updating your org name, error message" + responseJSON['message'], 'red-x-200px.png');
+          })
+        } // End of form validation else statement
       }
       else {
         alert('No session information - please sign in first.')
@@ -430,9 +502,11 @@ $(document).ready(function() {
       }
       else{
         $('#orgMgmtSection').fadeIn();
+        $('#orgNameInput').val(org.orgName);
+        $('#orgNameSpan').text(org.orgName);
 
-        $('#dashboardRoutesTable').html('');
-        $('#dashboardRoutesTableLoader').show();
+        $('#dashboardOrgUsersTable').html('');
+        $('#dashboardOrgUsersTableLoader').show();
         if(auth0Profile){
           $.ajax({
             url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/byOrg/' + org._id,
@@ -522,6 +596,14 @@ $(document).ready(function() {
 
     $('#addUserToOrgBtn').click(function(){
       addUserToOrg()
+    })
+
+    $('#editOrgNameBtn').click(function(){
+      $('#updateOrgNameForm').slideDown();
+    })
+
+    $('#saveOrgNameBtn').click(function(){
+      updateOrg();
     })
 
     //////////////////////////////////////////
