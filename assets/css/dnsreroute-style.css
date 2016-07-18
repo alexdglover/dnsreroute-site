@@ -16,7 +16,7 @@ body {
     font-family: 'Ruda', sans-serif;
     padding: 0px !important;
     margin: 0px !important;
-    font-size:13px;
+    font-size:16px;
 }
 
 ul li {
@@ -436,7 +436,7 @@ ul.sidebar-menu li a.active i {
     margin-top: 60px;
     /*padding-left: 15px;
     padding-right: 15px;*/
-    padding-bottom: 15px;
+    /*padding-bottom: 15px;*/
     padding-top: 0px;
     width: 100%;
 }
@@ -1001,12 +1001,12 @@ PANELS CONFIGURATIONS
 
 .pn {
   /* original value - height: 250px;*/
-  height: 420px;
+  height: 445px;
 	box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 
 .pn:hover {
-	box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 4px 6px 4px rgba(0, 0, 0, 0.5);
 
 }
 
@@ -2311,7 +2311,7 @@ label {
 .section-hero {
     min-height: 800px;
     color: white;
-    padding: 300px;
+    padding-top: 300px;
 
 }
 
@@ -2381,4 +2381,12 @@ label {
 
 .table-white-bkg {
   background: white;
+}
+
+.hero-backdrop {
+  background-color: rgba(0,0,0,0.5);
+  padding: 15px;
+  width: 110%;
+  margin-left: -5%;
+  margin-right: -5%;
 }

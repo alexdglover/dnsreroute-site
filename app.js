@@ -382,7 +382,7 @@ $(document).ready(function() {
             tableContent += route.type;
             tableContent += '</td>';
             tableContent += '<td><span class="label label-success label-mini">Healthy</span></td>';
-            tableContent += '<td style="min-width: 100px;"><button class="btn btn-success btn-xs" style="margin-right: 3px;"><i class="fa fa-check"></i></button><button class="btn btn-primary btn-xs" style="margin-right: 3px;"><i class="fa fa-pencil"></i></button><button class="btn btn-danger btn-xs deleteRoute" incomingRoute="' + route.incomingRoute + '"><i class="fa fa-trash-o "></i></button></td>';
+            tableContent += '<td><button class="btn btn-danger btn-xs deleteRoute" incomingRoute="' + route.incomingRoute + '"><i class="fa fa-trash-o "></i></button></td>';
             tableContent += '</tr>';
           });
 
@@ -554,7 +554,7 @@ $(document).ready(function() {
               tableContent += '<td>';
               tableContent += user.userEmail;
               tableContent += '</td>';
-              tableContent += '<td style="min-width: 100px;"><button class="btn btn-success btn-xs" style="margin-right: 3px;"><i class="fa fa-check"></i></button><button class="btn btn-primary btn-xs" style="margin-right: 3px;"><i class="fa fa-pencil"></i></button><button class="btn btn-danger btn-xs deleteUser" userEmail="' + user.userEmail + '"><i class="fa fa-trash-o "></i></button></td>';
+              tableContent += '<td><button class="btn btn-danger btn-xs deleteUser" userEmail="' + user.userEmail + '"><i class="fa fa-trash-o "></i></button></td>';
               tableContent += '</tr>';
             });
 
