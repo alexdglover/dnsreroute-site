@@ -518,10 +518,22 @@ $(document).ready(function() {
       console.log('Leaving populateSubscriptionsPage function');
     }
 
+    function populateApiPlaygroundPage(){
+      hideAllPages();
+      $('#apiPlaygroundPage').fadeIn();
+    }
+
+    function populateSupportPage(){
+      hideAllPages();
+      $('#supportPage').fadeIn();
+    }
+
     function hideAllPages(){
       $('#welcome').hide();
       $('#dashboardPage').hide();
       $('#subscriptionsPage').hide();
+      $('#apiPlaygroundPage').hide();
+      $('#supportPage').hide();
     }
 
     function populateOrgPanel(){
@@ -603,6 +615,14 @@ $(document).ready(function() {
 
     $('#navSubscriptions').click(function(){
       populateSubscriptionsPage();
+    })
+
+    $('#navApiPlayground').click(function(){
+      populateApiPlaygroundPage();
+    })
+
+    $('#navSupport').click(function(){
+      populateSupportPage();
     })
 
     $('#btnUpgrade').click(function(){
