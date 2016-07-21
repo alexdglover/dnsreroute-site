@@ -527,6 +527,7 @@ $(document).ready(function() {
     function populateOrgPanel(){
       if(org.subscription == 'freeTier'){
         $('#noOrgMgmtWarning').fadeIn();
+        $('#orgMgmtSection').hide();
       }
       else{
         $('#noOrgMgmtWarning').hide();
