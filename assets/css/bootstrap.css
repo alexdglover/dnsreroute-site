@@ -2635,6 +2635,8 @@ select[multiple].input-lg {
   margin-top: 5px;
   margin-bottom: 10px;
   color: #737373;
+  /* Not part of original bootstrap.css, added for DNSReRoute */
+  font-size: 12px;
 }
 @media (min-width: 768px) {
   .form-inline .form-group {
