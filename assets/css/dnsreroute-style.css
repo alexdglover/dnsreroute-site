@@ -1001,7 +1001,7 @@ PANELS CONFIGURATIONS
 
 .pn {
   /* original value - height: 250px;*/
-  height: 445px;
+  min-height: 445px;
 	box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 
