@@ -11,7 +11,9 @@ Premium: http://www.gridgum.com
 
 /* BASIC THEME CONFIGURATION */
 body {
-    color: #797979;
+    /* Original value */
+    /*color: #797979;*/
+    color: #424a5d;
 	  background: #f2f2f2;
     font-family: 'Ruda', sans-serif;
     padding: 0px !important;
@@ -1073,6 +1075,7 @@ PANELS CONFIGURATIONS
 .blue-panel {
 	text-align: center;
 	background: #424a5d;
+  color: #424a5d;
 }
 .blue-panel .blue-header {
 	background: #428bca;
