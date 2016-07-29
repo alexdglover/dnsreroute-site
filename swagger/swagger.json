@@ -4,7 +4,8 @@
         "version": "0.0.1",
         "title": "DNSReRoute"
     },
-    "basePath": "dnsreroutedev-dnsreroute.rhcloud.com",
+    "host":"dnsreroutedev-dnsreroute.rhcloud.com",
+    "basePath": "/",
     "schemes": [
       "https"
     ],
@@ -20,6 +21,11 @@
             "get": {
                 "description": "Gets `Survey` objects.\nRequired query param of **name** will be used as search criteria.\nShould only return one object.\nIf minimum entries haven't been met, responses will not be included in return data.\n",
                 "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful response",

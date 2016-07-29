@@ -79,11 +79,12 @@
 
       function addApiKeyAuthorization(){
         var bearerToken = getParameterByName('bearerToken');
-        $('#input_apiKey').value = bearerToken;
+        $('#input_apiKey').val(bearerToken);
         var key = encodeURIComponent($('#input_apiKey')[0].value);
         if(key && key.trim() != "") {
-            var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
-            window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
+            // var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
+            var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization( "Authorization", "Bearer " + key, "header" );
+            window.swaggerUi.api.clientAuthorizations.add("Bearer", apiKeyAuth);
             log("added key " + key);
         }
       }
