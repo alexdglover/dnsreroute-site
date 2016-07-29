@@ -51,7 +51,7 @@ $(document).ready(function() {
         });
 
         // Add bearer token to API Playground href
-        $('#navApiPlayground').attr('href', 'swagger/index.html?' + id_token);
+        $('#navApiPlayground').attr('href', 'swagger/index.html?bearerToken=' + id_token);
 
       });
     }
