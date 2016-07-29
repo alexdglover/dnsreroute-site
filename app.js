@@ -50,6 +50,9 @@ $(document).ready(function() {
           })
         });
 
+        // Add bearer token to API Playground href
+        $('#navApiPlayground').attr('href', 'swagger/index.html?' + id_token);
+
       });
     }
 
@@ -521,6 +524,8 @@ $(document).ready(function() {
     function populateApiPlaygroundPage(){
       hideAllPages();
       $('#apiPlaygroundPage').fadeIn();
+      $('#input_apiKey').val(localStorage.getItem('id_token'));
+      $('#apiKeyText').text(localStorage.getItem('id_token'));
     }
 
     function populateSupportPage(){
@@ -617,9 +622,9 @@ $(document).ready(function() {
       populateSubscriptionsPage();
     })
 
-    $('#navApiPlayground').click(function(){
-      populateApiPlaygroundPage();
-    })
+    // $('#navApiPlayground').click(function(){
+    //   populateApiPlaygroundPage();
+    // })
 
     $('#navSupport').click(function(){
       populateSupportPage();
