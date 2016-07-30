@@ -555,7 +555,8 @@ $(document).ready(function() {
       console.log(org.subscription);
       hideAllPages();
       $('#userAccountPage').fadeIn();
-
+      $('#userEmailSpan').val(auth0Profile.email);
+      $('#updaterUserFormUserName').val(auth0Profile.nickname);
     }
 
     function populateApiPlaygroundPage(){

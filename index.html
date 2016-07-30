@@ -746,7 +746,7 @@
                       <div class="form-group">
                           <label class="col-sm-2 col-sm-2 control-label">Display Name</label>
                           <div class="col-sm-10">
-                              <input name="userName" type="text" class="form-control" required>
+                              <input id="updaterUserFormUserName" name="userName" type="text" class="form-control" required>
                               <span class="help-block">This is your "friendly name" displayed throughout the site</span>
                           </div>
                       </div>
@@ -759,112 +759,15 @@
                 </div>
 
                 <div class="col-lg-6 col-md-12 col-sm-12">
-                  <div class="showback" style="overflow: auto;">
-                    <h3><i class="fa fa-angle-right"></i> Organization</h3>
-                    <hr />
-                    <div id="noOrgMgmtWarning" class="alert alert-warning" style="display:none;">
-                      <p>No organization - please upgrade to Developer or Enterprise Tier</p>
-                    </div>
-                    <div id="orgMgmtSection" style="display:none;">
-                      <h4>Org Name:
-                        <span id="orgNameSpan"></span>   <button id="editOrgNameBtn" type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>
-                      </h4>
-                      <form class="form-horizontal style-form" method="get" id="updateOrgNameForm" style="display:none;">
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Org Name</label>
-                            <div class="col-sm-8">
-                                <input id="orgNameInput" name="orgName" type="text" class="form-control">
-                                <span id="orgNameSpan"></span>
-                            </div>
-                            <div class="col-sm-2">
-                              <button id="saveOrgNameBtn" type="button" class="btn btn-sm btn-success"><i class="fa fa-floppy-o"></i></button>
-                            </div>
-                        </div>
-                      </form>
-
-                      <table id="orgUsersTable" class="table table-striped table-advance table-hover">
-                        <thead>
-                        <tr>
-                            <th><i class="fa fa-user"></i> User Name</th>
-                            <th><i class="fa fa-envelope-o"></i> Email Address</th>
-                            <th><i class="fa fa-wrench"></i> Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody id="dashboardOrgUsersTable">
-                        </tbody>
-                      </table>
-                      <div id="dashboardOrgUsersTableLoader" class="loader" style="display: none;">Loading...</div>
-                      <h4><i class="fa fa-angle-right"></i> Add new users</h4>
-                      <hr>
-                      <form class="form-horizontal style-form" method="get" id="addUserToOrgForm">
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
-                                <input name="userName" type="text" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-sm-2 control-label">Email Address</label>
-                            <div class="col-sm-10">
-                                <input name="userEmail" type="email" class="form-control" pattern="(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])" required>
-                                <span class="help-block">Must be a valid email address.</span>
-                            </div>
-                        </div>
-                        <input name="orgId" class="orgIdHiddenInput" style="display:none;" type="hidden">
-                        <input name="requestorEmail" class="requestorHiddenInput" style="display:none;" type="hidden">
-                        <button id="addUserToOrgBtn" type="button" class="btn btn-lg btn-primary">Add User</button>
-                      </form>
-                    </div>
-                  </div>
                   <div class="showback">
-                    <h3><i class="fa fa-angle-right"></i> Billing</h3>
+                    <h3 style="background-color:#d9534f; color: white;"><i class="fa fa-angle-right"></i> Danger Zone</h3>
                     <hr />
-                    <h4>Current subscription: <span id="subscriptionTitle"></span></h4>
-                    <button class="btn btn-primary btn-lg" type="button" id="btnUpgrade">Upgrade</button>
-                    <br />
-                    <h4>Your plan includes:</h4>
-                    <table class="table table-striped table-advance table-hover">
-                      <tbody id="subscriptionDetailsTable">
-                        <!-- Old table content for reference -->
-                        <!--
-                        <tr>
-                            <td>Number of redirects</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>Traffic Limit</td>
-                            <td><span class="label label-success label-small">Unlimited</span></td>
-                        </tr>
-                        <tr>
-                            <td>SSL Support</td>
-                            <td><span class="label label-success label-mini">Yes</span></td>
-                        </tr>
-                        <tr>
-                            <td>Deep URL Support</td>
-                            <td><span class="label label-success label-mini">Yes</span></td>
-                        </tr>
-                        <tr>
-                            <td>Organization/Multi-User Support</td>
-                            <td><span class="label label-danger label-mini">No</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <a href="basic_table.html#">
-                                    Another Co
-                                </a>
-                            </td>
-                            <td class="hidden-phone">Lorem Ipsum dolor</td>
-                            <td>14400.00$ </td>
-                            <td><span class="label label-success label-mini">Paid</span></td>
-                            <td>
-                                <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
-                                <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                                <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                            </td>
-                        </tr> -->
-                      </tbody>
-                    </table>
+                    <h4>Delete Account</h4>
+                    <div class="alert alert-danger">
+                      <strong>Danger!</strong> This will cancel your subscription, delete your organization, and delete all routes and
+                      users that are associated with the organization. This is not reversible. Are you sure you want to cancel?
+                    </div>
+                    <button id="deleteAccountBtn" type="button" class="btn btn-lg btn-danger">Delete Account</button>
                   </div>
                 </div>
 
