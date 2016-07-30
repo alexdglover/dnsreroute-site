@@ -361,6 +361,7 @@ $(document).ready(function() {
           console.log(data);
           gritterWrapper('Updated org', "Your org name was updated successfully!", 'green-check-200px.png');
           user.userName = $('#updaterUserFormUserName').val();
+          $('#profile-nickname').text(user.userName);
           populateUserPanel();
         }).fail(function(jqXHR, textStatus, errorThrown){
           $('#userDetailsLoader').hide();
