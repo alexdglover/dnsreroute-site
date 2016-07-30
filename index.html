@@ -352,6 +352,12 @@
                           <span>API Playground</span>
                       </a>
                   </li>
+                  <li class="sub-menu">
+                      <a href="#" id="navUserSettings">
+                          <i class="fa fa-user"></i>
+                          <span>Account Settings</span>
+                      </a>
+                  </li>
                   <!-- <li class="sub-menu">
                       <a href="#" id="navSupport">
                           <i class="fa fa-th"></i>
@@ -707,7 +713,7 @@
               </div><!-- end of row -->
               <div id="subscriptionsPageLoader" class="loader" style="display: none;">Loading...</div>
             </div><!-- end of id="subscriptionsPage"-->
-            <div id="apiPlaygroundPage" style="display:none;">
+            <!-- <div id="apiPlaygroundPage" style="display:none;">
               <div class="row mt">
                 <div class="col-lg-12 col-md-12 col-sm-12 mb" id="swaggerPanel">
                   <div id="apiKeyAlert" class="alert alert-success">
@@ -718,10 +724,153 @@
                   <object data="swagger/index.html" style="min-height: 800px; height: 100%; width: 100%;">
                 </div>
               </div>
-            </div>
-            <div id="supportPage" style="display:none;">
+            </div> -->
+            <!-- <div id="supportPage" style="display:none;">
               Embed some email me nonsense
-            </div>
+            </div> -->
+            <div id="userAccountPage">
+              <div class="row mt">
+
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                  <div class="showback">
+                    <h3><i class="fa fa-angle-right"></i> User Account</h3>
+                    <hr />
+                    <form class="form-horizontal style-form" method="get" id="updateUserForm">
+                      <div class="form-group">
+                          <label class="col-sm-2 col-sm-2 control-label">User Email</label>
+                          <div class="col-sm-10">
+                              <span id="userEmailSpan"></span>
+                              <span class="help-block">Your email address is your user ID, and is therefore not editable</span>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-sm-2 col-sm-2 control-label">Display Name</label>
+                          <div class="col-sm-10">
+                              <input name="userName" type="text" class="form-control" required>
+                              <span class="help-block">This is your "friendly name" displayed throughout the site</span>
+                          </div>
+                      </div>
+                      <input name="orgId" class="orgIdHiddenInput" style="display:none;" type="hidden">
+                      <button id="updateUserBtn" type="button" class="btn btn-lg btn-primary">Update</button>
+                    </form>
+
+
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                  <div class="showback" style="overflow: auto;">
+                    <h3><i class="fa fa-angle-right"></i> Organization</h3>
+                    <hr />
+                    <div id="noOrgMgmtWarning" class="alert alert-warning" style="display:none;">
+                      <p>No organization - please upgrade to Developer or Enterprise Tier</p>
+                    </div>
+                    <div id="orgMgmtSection" style="display:none;">
+                      <h4>Org Name:
+                        <span id="orgNameSpan"></span>   <button id="editOrgNameBtn" type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>
+                      </h4>
+                      <form class="form-horizontal style-form" method="get" id="updateOrgNameForm" style="display:none;">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Org Name</label>
+                            <div class="col-sm-8">
+                                <input id="orgNameInput" name="orgName" type="text" class="form-control">
+                                <span id="orgNameSpan"></span>
+                            </div>
+                            <div class="col-sm-2">
+                              <button id="saveOrgNameBtn" type="button" class="btn btn-sm btn-success"><i class="fa fa-floppy-o"></i></button>
+                            </div>
+                        </div>
+                      </form>
+
+                      <table id="orgUsersTable" class="table table-striped table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th><i class="fa fa-user"></i> User Name</th>
+                            <th><i class="fa fa-envelope-o"></i> Email Address</th>
+                            <th><i class="fa fa-wrench"></i> Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="dashboardOrgUsersTable">
+                        </tbody>
+                      </table>
+                      <div id="dashboardOrgUsersTableLoader" class="loader" style="display: none;">Loading...</div>
+                      <h4><i class="fa fa-angle-right"></i> Add new users</h4>
+                      <hr>
+                      <form class="form-horizontal style-form" method="get" id="addUserToOrgForm">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input name="userName" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Email Address</label>
+                            <div class="col-sm-10">
+                                <input name="userEmail" type="email" class="form-control" pattern="(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])" required>
+                                <span class="help-block">Must be a valid email address.</span>
+                            </div>
+                        </div>
+                        <input name="orgId" class="orgIdHiddenInput" style="display:none;" type="hidden">
+                        <input name="requestorEmail" class="requestorHiddenInput" style="display:none;" type="hidden">
+                        <button id="addUserToOrgBtn" type="button" class="btn btn-lg btn-primary">Add User</button>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="showback">
+                    <h3><i class="fa fa-angle-right"></i> Billing</h3>
+                    <hr />
+                    <h4>Current subscription: <span id="subscriptionTitle"></span></h4>
+                    <button class="btn btn-primary btn-lg" type="button" id="btnUpgrade">Upgrade</button>
+                    <br />
+                    <h4>Your plan includes:</h4>
+                    <table class="table table-striped table-advance table-hover">
+                      <tbody id="subscriptionDetailsTable">
+                        <!-- Old table content for reference -->
+                        <!--
+                        <tr>
+                            <td>Number of redirects</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>Traffic Limit</td>
+                            <td><span class="label label-success label-small">Unlimited</span></td>
+                        </tr>
+                        <tr>
+                            <td>SSL Support</td>
+                            <td><span class="label label-success label-mini">Yes</span></td>
+                        </tr>
+                        <tr>
+                            <td>Deep URL Support</td>
+                            <td><span class="label label-success label-mini">Yes</span></td>
+                        </tr>
+                        <tr>
+                            <td>Organization/Multi-User Support</td>
+                            <td><span class="label label-danger label-mini">No</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <a href="basic_table.html#">
+                                    Another Co
+                                </a>
+                            </td>
+                            <td class="hidden-phone">Lorem Ipsum dolor</td>
+                            <td>14400.00$ </td>
+                            <td><span class="label label-success label-mini">Paid</span></td>
+                            <td>
+                                <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
+                                <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                            </td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div> <!--end of row mt-->
+            </div><!-- end of id="userAccountPage"-->
+
           </section>
       </section>
 
