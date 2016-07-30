@@ -557,7 +557,7 @@ $(document).ready(function() {
       console.log(org.subscription);
       hideAllPages();
       $('#userAccountPage').fadeIn();
-      $('#userEmailSpan').val(auth0Profile.email);
+      $('#userEmailSpan').text(auth0Profile.email);
       $('#updaterUserFormUserName').val(user.userName);
     }
 
