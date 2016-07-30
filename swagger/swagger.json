@@ -2,7 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "0.0.1",
-    "title": "DNSReRoute"
+    "title": "DNSReRoute",
+    "description": "Welcome to the DNSReRoute API! This API playground was created to help you experiment with the API so you can quickly and easily build your own API client or integrations. Note that for all requests, a SAML Bearer token must be set. If you browsed to this page via the DNSReRoute admin console, that token is already set for you. For API integrations, you will have to retrieve the SAML bearer by hitting the auth endpoint. For example, with cURL you would authenticate like this: \n\n```curl --data \"grant_type=password&username=youremail@domain.com&password=yourPassword&client_id=zERRcIFKOZhMpaQmyMuTRY9IgYfGmkmL&connection=Username-Password-Authentication&scope=openid\" https://alexdglover.auth0.com/oauth/ro```\n\n This will return your access_token which you can use for authenticated requests. For example, with cURL you would execute: \n\n```curl -H \"Authorization: Bearer <access_token_goes_here>\" https://dnsreroutedev-dnsreroute.rhcloud.com/whatever/end/point```"
   },
   "host": "dnsreroutedev-dnsreroute.rhcloud.com",
   "basePath": "/",
@@ -17,6 +18,211 @@
     }
   },
   "paths": {
+    "/routes/byUserEmail/{userEmail}": {
+      "get": {
+        "description": "Gets all routes associated with a given user.\nNote - this API will only list routes managed by your org.",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "path",
+            "description": "User's email address",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "Routes JSON",
+              "type": "array",
+              "items": {
+                "title": "Routes",
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "incomingRoute": {
+                    "type": "string"
+                  },
+                  "outgoingRoute": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "orgId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/routes/byOrg/{orgId}": {
+      "get": {
+        "description": "Gets all routes associated with a given org.\nNote - this API will only list routes managed by your org.",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "description": "ID of organization",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "Routes JSON",
+              "type": "array",
+              "items": {
+                "title": "Routes",
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "incomingRoute": {
+                    "type": "string"
+                  },
+                  "outgoingRoute": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "orgId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Org not found"
+          }
+        }
+      }
+    },
+
+    "/routes": {
+      "post": {
+        "description": "Creates a new route.",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "query",
+            "description": "ID of organization",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of redirect (301 or 302)",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "incomingRoute",
+            "in": "query",
+            "description": "The inbound DNS name that you want redirected",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "outgoingRoute",
+            "in": "query",
+            "description": "The URL you want your users redirected to",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "JSON Response Message",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Org not found"
+          }
+        }
+      }
+    },
+
+    "/routes/{incomingRoute}": {
+      "delete": {
+        "description": "Deletes a route.",
+        "parameters": [
+          {
+            "name": "incomingRoute",
+            "in": "path",
+            "description": "The inbound DNS name of the route you want deleted",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "JSON Response Message",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+
+
     "/users": {
       "get": {
         "description": "Gets all users.\nNote - this API will only list users in your org.",
@@ -46,7 +252,7 @@
                     "type": "string"
                   },
                   "orgId": {
-                    "type": "number"
+                    "type": "string"
                   }
                 }
               }
@@ -91,7 +297,7 @@
           "200": {
             "description": "Successful response",
             "schema": {
-              "title": "UsersJSON",
+              "title": "JSON Response Message",
               "type": "object",
               "properties": {
                 "message": {
@@ -139,7 +345,7 @@
                   "type": "string"
                 },
                 "orgId": {
-                  "type": "number"
+                  "type": "string"
                 }
               }
             }
@@ -183,7 +389,39 @@
           "200": {
             "description": "Successful response",
             "schema": {
-              "title": "UserJSON",
+              "title": "JSON Response Message",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a specific user for a given email address.\nNote - this API will only delete users in your org.",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "path",
+            "description": "Email of the user you want to query",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "JSON Response Message",
               "type": "object",
               "properties": {
                 "message": {
@@ -234,7 +472,7 @@
                     "type": "string"
                   },
                   "orgId": {
-                    "type": "number"
+                    "type": "string"
                   }
                 }
               }
