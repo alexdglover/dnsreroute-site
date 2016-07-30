@@ -374,6 +374,32 @@ $(document).ready(function() {
       }
     }
 
+    function deleteAccount(){
+      console.log('deleteAccount function triggered');
+      // var incomingRoute = $(this).attr('id');
+      if(auth0Profile){
+        $('#userDetailsLoader').show();
+        formData = $('#updateUserForm').serialize();
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id,
+          dataType: 'json',
+          type: 'DELETE'
+        }).done(function(data, textStatus, jqXHR) {
+          console.log('Successfully deleted account');
+          console.log(data);
+          gritterWrapper('Account deleted', "Your account has been deleted!", 'green-check-200px.png');
+          // Signout the user after 3 seconds
+          setTimeout(signOut,3000)
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          var responseJSON = JSON.parse(jqXHR.responseText);
+          gritterWrapper('Failed to delete account', "There was an error while deleting your account, error message" + responseJSON['message'], 'red-x-200px.png');
+        })
+      }
+      else {
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
+      }
+    }
+
     //////////////////////////////////////////
     // End of API functions
     //////////////////////////////////////////
@@ -643,6 +669,10 @@ $(document).ready(function() {
 
     }
 
+    //////////////////////////////////////////
+    // End of Page population functions
+    //////////////////////////////////////////
+
 
     //////////////////////////////////////////
     // Button binding functions
@@ -682,10 +712,7 @@ $(document).ready(function() {
     })
 
     $('.signout').click(function(){
-      if (localStorage.getItem('id_token') !== null) {
-        localStorage.removeItem('id_token');
-      }
-      window.location.href = 'index.html';
+      signOut();
     })
 
     $('#fake-login').click(function(e) {
@@ -710,9 +737,20 @@ $(document).ready(function() {
       updateUser();
     })
 
+    $('#deleteAccountBtn').click(function(){
+      deleteAccount();
+    })
+
     //////////////////////////////////////////
     // End of Button binding functions
     //////////////////////////////////////////
+
+    function signOut(){
+      if (localStorage.getItem('id_token') !== null) {
+        localStorage.removeItem('id_token');
+      }
+      window.location.href = 'index.html';
+    }
 
     function gritterWrapper(title, text, image){
       var unique_id = $.gritter.add({
