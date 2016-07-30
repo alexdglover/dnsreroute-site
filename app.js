@@ -550,6 +550,14 @@ $(document).ready(function() {
       console.log('Leaving populateSubscriptionsPage function');
     }
 
+    function populateUserAccountPage(){
+      console.log('org.subscription value is:');
+      console.log(org.subscription);
+      hideAllPages();
+      $('#userAccountPage').fadeIn();
+
+    }
+
     function populateApiPlaygroundPage(){
       hideAllPages();
       $('#apiPlaygroundPage').fadeIn();
@@ -655,8 +663,12 @@ $(document).ready(function() {
     //   populateApiPlaygroundPage();
     // })
 
-    $('#navSupport').click(function(){
-      populateSupportPage();
+    // $('#navSupport').click(function(){
+    //   populateSupportPage();
+    // })
+
+    $('#navUserAccount').click(function(){
+      populateUserAccountPage();
     })
 
     $('#btnUpgrade').click(function(){
