@@ -579,6 +579,7 @@ $(document).ready(function() {
       $('#subscriptionsPage').hide();
       $('#apiPlaygroundPage').hide();
       $('#supportPage').hide();
+      $('#userAccountPage').hide();
     }
 
     function populateOrgPanel(){
