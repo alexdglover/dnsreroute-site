@@ -343,6 +343,35 @@ $(document).ready(function() {
       }
     }
 
+    function updateUser(){
+      console.log('updateUser function triggered');
+      // var incomingRoute = $(this).attr('id');
+      if(auth0Profile){
+        $('#userDetailsLoader').show();
+        formData = $('#updateUserForm').serialize();
+        $.ajax({
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+          dataType: 'json',
+          data: formData,
+          type: 'PUT'
+        }).done(function(data, textStatus, jqXHR) {
+          // console.log(data);
+          $('#userDetailsLoader').hide();
+          console.log('Successfully updated user');
+          console.log(data);
+          gritterWrapper('Updated org', "Your org name was updated successfully!", 'green-check-200px.png');
+          populateUserPanel();
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          $('#userDetailsLoader').hide();
+          var responseJSON = JSON.parse(jqXHR.responseText);
+          gritterWrapper('Failed to update org', "There was an error while updating your user details, error message" + responseJSON['message'], 'red-x-200px.png');
+        })
+      }
+      else {
+        gritterWrapper('No session information!', 'No user session, please sign in first', 'red-x-200px.png');
+      }
+    }
+
     //////////////////////////////////////////
     // End of API functions
     //////////////////////////////////////////
@@ -659,6 +688,10 @@ $(document).ready(function() {
 
     $('#saveOrgNameBtn').click(function(){
       updateOrg();
+    })
+
+    $('#updateUserBtn').click(function(){
+      updateUser();
     })
 
     //////////////////////////////////////////
