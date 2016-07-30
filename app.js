@@ -286,7 +286,7 @@ $(document).ready(function() {
       if(auth0Profile){
         $('#dashboardOrgUsersTableLoader').show();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail + '/' + auth0Profile.email,
+          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail,
           // contentType: "application/json; charset=utf-8",
           dataType: 'json',
           // data: { "requestorEmail": auth0Profile.email },

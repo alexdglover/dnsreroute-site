@@ -1,163 +1,247 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "version": "0.0.1",
-        "title": "DNSReRoute"
-    },
-    "host":"dnsreroutedev-dnsreroute.rhcloud.com",
-    "basePath": "/",
-    "schemes": [
-      "https"
-    ],
-    "securityDefinitions": {
-      "Bearer": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
-      }
-    },
-    "paths": {
-        "/users/": {
-            "get": {
-                "description": "Gets `Survey` objects.\nRequired query param of **name** will be used as search criteria.\nShould only return one object.\nIf minimum entries haven't been met, responses will not be included in return data.\n",
-                "parameters": [],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "SurveyJSON",
-                            "type": "array",
-                            "items": {
-                                "title": "Survey",
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "currency": {
-                                        "type": "string"
-                                    },
-                                    "period": {
-                                        "type": "string"
-                                    },
-                                    "minEntries": {
-                                        "type": "number"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/survey/addResponse/{name}": {
-            "post": {
-                "description": "Adds a single response value to an existing survey.\nRequired query params of **name** (used to \nfind the survey to be updated) and **response** (salary value from respondent.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "description": "name of survey",
-                        "required": true,
-                        "type": "string",
-                        "format": "string"
-                    },
-		    {
-                        "name": "response",
-                        "in": "query",
-                        "description": "response value",
-                        "required": true,
-                        "type": "number",
-                        "format": "number"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "SurveyJSON",
-                            "type": "array",
-                            "items": {
-                                "title": "Survey",
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "response": {
-                                        "type": "number"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-	"/survey/addSurvey": {
-            "post": {
-                "description": "Creates a new survey.\nRequired query params of **name**, **currency**, **period**, and **minEntries**.\n",
-                "parameters": [
-                    {
-                        "name": "surveyName",
-                        "in": "query",
-                        "description": "Name of the new survey",
-                        "required": true,
-                        "type": "string",
-                        "format": "string"
-                    },
-		    {
-                        "name": "currency",
-                        "in": "query",
-                        "description": "Currency salary is paid in.",
-                        "required": true,
-                        "type": "string",
-                        "format": "string"
-                    },
-		    {
-                        "name": "period",
-                        "in": "query",
-                        "description": "Time period for salary.",
-                        "required": true,
-                        "type": "string",
-                        "format": "string"
-                    },
-		    {
-                        "name": "minEntries",
-                        "in": "query",
-                        "description": "Minimum number of entries before results are published.",
-                        "required": true,
-                        "type": "number",
-                        "format": "number"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "ArrayOfResponses",
-                            "type": "array",
-                            "items": {
-                                "title": "Survey",
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "response": {
-                                        "type": "number"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "DNSReRoute"
+  },
+  "host": "dnsreroutedev-dnsreroute.rhcloud.com",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "Gets all users.\nNote - this API will only list users in your org.",
+        "parameters": [],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "UsersJSON",
+              "type": "array",
+              "items": {
+                "title": "User",
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "userEmail": {
+                    "type": "string"
+                  },
+                  "orgId": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new user.",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "query",
+            "description": "New user's email address",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "description": "New user's friendly name (not used for logins)",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "query",
+            "description": "ID of the org you want to add the user to (must be your own org ID)",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "UsersJSON",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/users/{userEmail}": {
+      "get": {
+        "description": "Gets a specific user for a given email address.\nNote - this API will only list users in your org.",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "path",
+            "description": "Email of the user you want to query",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "UserJSON",
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string"
+                },
+                "userName": {
+                  "type": "string"
+                },
+                "userEmail": {
+                  "type": "string"
+                },
+                "orgId": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update a specific user for a given email address.\nNote - this API will only allow you to update users in your org.",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "path",
+            "description": "Email of the user you want to query",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "description": "Email of the user you want to query",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "orgId",
+            "in": "query",
+            "description": "Email of the user you want to query",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "UserJSON",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/users/byOrg/{orgId}": {
+      "get": {
+        "description": "Gets all users for a given org.\nNote - this API will only list users in your org.",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "description": "ID of the Organization",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "UsersJSON",
+              "type": "array",
+              "items": {
+                "title": "User",
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "userEmail": {
+                    "type": "string"
+                  },
+                  "orgId": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
