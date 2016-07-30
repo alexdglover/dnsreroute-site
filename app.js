@@ -467,7 +467,7 @@ $(document).ready(function() {
       hideAllPages();
       $('#dashboardPage').fadeIn();
       if(typeof auth0Profile !== 'undefined'){
-        $('#profile-nickname').text(auth0Profile.nickname);
+        $('#profile-nickname').text(user.userName);
         $('#profile-photo').attr('src', auth0Profile.picture);
         $.ajax({
           url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
@@ -556,7 +556,7 @@ $(document).ready(function() {
       hideAllPages();
       $('#userAccountPage').fadeIn();
       $('#userEmailSpan').val(auth0Profile.email);
-      $('#updaterUserFormUserName').val(auth0Profile.nickname);
+      $('#updaterUserFormUserName').val(user.userName);
     }
 
     function populateApiPlaygroundPage(){
