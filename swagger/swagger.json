@@ -5,7 +5,7 @@
     "title": "DNSReRoute",
     "description": "Welcome to the DNSReRoute API! This API playground was created to help you experiment with the API so you can quickly and easily build your own API client or integrations. Note that for all requests, a SAML Bearer token must be set. If you browsed to this page via the DNSReRoute admin console, that token is already set for you. For API integrations, you will have to retrieve the SAML bearer by hitting the auth endpoint. For example, with cURL you would authenticate like this: \n\n```curl --data \"grant_type=password&username=youremail@domain.com&password=yourPassword&client_id=zERRcIFKOZhMpaQmyMuTRY9IgYfGmkmL&connection=Username-Password-Authentication&scope=openid\" https://alexdglover.auth0.com/oauth/ro```\n\n This will return your access_token which you can use for authenticated requests. For example, with cURL you would execute: \n\n```curl -H \"Authorization: Bearer <access_token_goes_here>\" https://dnsreroutedev-dnsreroute.rhcloud.com/whatever/end/point```"
   },
-  "host": "dnsreroutedev-dnsreroute.rhcloud.com",
+  "host": "dnsrerouteprod-dnsreroute.rhcloud.com",
   "basePath": "/",
   "schemes": [
     "https"
