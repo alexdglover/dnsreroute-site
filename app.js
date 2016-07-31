@@ -3,6 +3,7 @@ var auth0Profile;
 var org;
 var user;
 var subscriptionName;
+var apiBaseUrl = 'https://dnsreroutedev-dnsreroute.rhcloud.com';
 
 $(document).ready(function() {
       var lock = new Auth0Lock(
@@ -69,7 +70,7 @@ $(document).ready(function() {
     function registerNewUser(){
       console.log('registerNewUser function triggered');
       $.ajax({
-        url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+        url: apiBaseUrl + '/users/' + auth0Profile.email,
         dataType: 'json',
         type: 'GET'
       }).then(function(data, textStatus, jqXHR) {
@@ -86,7 +87,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/register',
+          url: apiBaseUrl + '/users/register',
           dataType: 'json',
           type: 'POST',
           data: {
@@ -115,7 +116,7 @@ $(document).ready(function() {
     function setUser(callback){
       if(typeof auth0Profile !== 'undefined'){
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+          url: apiBaseUrl + '/users/' + auth0Profile.email,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -137,7 +138,7 @@ $(document).ready(function() {
     function setOrg(callback){
       if(typeof user !== 'undefined'){
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + user.orgId,
+          url: apiBaseUrl + '/orgs/' + user.orgId,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -166,7 +167,7 @@ $(document).ready(function() {
       if(auth0Profile){
         $('#dashboardRoutesTableLoader').show();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/' + incomingRoute,
+          url: apiBaseUrl + '/routes/' + incomingRoute,
           dataType: 'json',
           type: 'DELETE'
         }).done(function(data, textStatus, jqXHR) {
@@ -200,7 +201,7 @@ $(document).ready(function() {
         else {
           formData = $('#addRouteForm').serialize();
           $.ajax({
-            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes',
+            url: apiBaseUrl + '/routes',
             dataType: 'json',
             data: formData,
             type: 'POST'
@@ -244,7 +245,7 @@ $(document).ready(function() {
           $('#dashboardOrgUsersTableLoader').show();
           formData = $('#addUserToOrgForm').serialize();
           $.ajax({
-            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users',
+            url: apiBaseUrl + '/users',
             dataType: 'json',
             data: formData,
             type: 'POST'
@@ -286,7 +287,7 @@ $(document).ready(function() {
       if(auth0Profile){
         $('#dashboardOrgUsersTableLoader').show();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + userEmail,
+          url: apiBaseUrl + '/users/' + userEmail,
           // contentType: "application/json; charset=utf-8",
           dataType: 'json',
           // data: { "requestorEmail": auth0Profile.email },
@@ -319,7 +320,7 @@ $(document).ready(function() {
         $('#dashboardOrgUsersTableLoader').show();
         formData = $('#updateOrgNameForm').serialize();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id,
+          url: apiBaseUrl + '/orgs/' + org._id,
           dataType: 'json',
           data: formData,
           type: 'PUT'
@@ -350,7 +351,7 @@ $(document).ready(function() {
         $('#userDetailsLoader').show();
         formData = $('#updateUserForm').serialize();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+          url: apiBaseUrl + '/users/' + auth0Profile.email,
           dataType: 'json',
           data: formData,
           type: 'PUT'
@@ -381,7 +382,7 @@ $(document).ready(function() {
         $('#userDetailsLoader').show();
         formData = $('#updateUserForm').serialize();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id,
+          url: apiBaseUrl + '/orgs/' + org._id,
           dataType: 'json',
           type: 'DELETE'
         }).done(function(data, textStatus, jqXHR) {
@@ -422,7 +423,7 @@ $(document).ready(function() {
       $('#dashboardRoutesTableLoader').show();
       if(auth0Profile){
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/routes/byUserEmail/' + auth0Profile.email,
+          url: apiBaseUrl + '/routes/byUserEmail/' + auth0Profile.email,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -472,7 +473,7 @@ $(document).ready(function() {
     function populateBillingPanel(){
       if(typeof auth0Profile !== 'undefined'){
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/subscriptions/' + org.subscription,
+          url: apiBaseUrl + '/subscriptions/' + org.subscription,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -498,7 +499,7 @@ $(document).ready(function() {
         $('#profile-nickname').text(user.userName);
         $('#profile-photo').attr('src', auth0Profile.picture);
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/' + auth0Profile.email,
+          url: apiBaseUrl + '/users/' + auth0Profile.email,
           dataType: 'json',
           type: 'GET'
         }).then(function(data, textStatus, jqXHR) {
@@ -623,7 +624,7 @@ $(document).ready(function() {
         $('#dashboardOrgUsersTableLoader').show();
         if(auth0Profile){
           $.ajax({
-            url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/users/byOrg/' + org._id,
+            url: apiBaseUrl + '/users/byOrg/' + org._id,
             dataType: 'json',
             type: 'GET'
           }).then(function(data, textStatus, jqXHR) {
@@ -775,8 +776,9 @@ $(document).ready(function() {
   //////////////////////////////////////////////////////////////////////
   var handler = StripeCheckout.configure({
     // Dev/testing key:
-    // key: 'pk_test_QrccwnKa5qKT2IxMPxRwykD9',
-    key: 'pk_live_zEGGVVmDhujYqhulEL1PW7sm',
+    key: 'pk_test_QrccwnKa5qKT2IxMPxRwykD9',
+    // Production key:
+    // key: 'pk_live_zEGGVVmDhujYqhulEL1PW7sm',
     // image: '/img/documentation/checkout/marketplace.png',
     locale: 'auto',
     zipCode: true,
@@ -786,7 +788,7 @@ $(document).ready(function() {
       if(auth0Profile){
         $('#subscriptionsPageLoader').show();
         $.ajax({
-          url: 'https://dnsreroutedev-dnsreroute.rhcloud.com/orgs/' + org._id + '/subscription',
+          url: apiBaseUrl + '/orgs/' + org._id + '/subscription',
           dataType: 'json',
           data: {
             "tokenId": token.id,
