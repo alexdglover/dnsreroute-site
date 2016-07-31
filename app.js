@@ -3,7 +3,7 @@ var auth0Profile;
 var org;
 var user;
 var subscriptionName;
-var apiBaseUrl = 'https://dnsreroutedev-dnsreroute.rhcloud.com';
+var apiBaseUrl = 'https://dnsrerouteprod-dnsreroute.rhcloud.com';
 
 $(document).ready(function() {
       var lock = new Auth0Lock(
@@ -776,9 +776,9 @@ $(document).ready(function() {
   //////////////////////////////////////////////////////////////////////
   var handler = StripeCheckout.configure({
     // Dev/testing key:
-    key: 'pk_test_QrccwnKa5qKT2IxMPxRwykD9',
+    // key: 'pk_test_QrccwnKa5qKT2IxMPxRwykD9',
     // Production key:
-    // key: 'pk_live_zEGGVVmDhujYqhulEL1PW7sm',
+    key: 'pk_live_zEGGVVmDhujYqhulEL1PW7sm',
     // image: '/img/documentation/checkout/marketplace.png',
     locale: 'auto',
     zipCode: true,
