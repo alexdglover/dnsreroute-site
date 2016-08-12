@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Dashboard">
-    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <meta name="description" content="DNS redirect service that offers HTTP 301 and HTTP 302 HTTP redirects. This allows our users to redirect domain to a specific path or page, including redirecting with URL parameters">
+    <meta name="author" content="DNSReRoute">
+    <meta name="keyword" content="DNS, redirect, URL redirect, 301 redirect, 302 redirect, redirect to URL">
 
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdn.auth0.com/js/lock-9.0.min.js"></script>
@@ -15,7 +15,7 @@
     <script src="auth0-variables.js"> </script>
     <script src="app.js"> </script>
 
-    <title>DNSReRoute</title>
+    <title>DNS Redirect Service - DNSReRoute</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -69,8 +69,8 @@
 
         <div class="full-width-section-white section-hero" style="overflow: hidden;">
           <div class="hero-backdrop">
-            <h1 class="callout">Let's get started with DNSReRoute!</h1>
-            <p> This will be a generic landing page that doesn't do anything but provide information and a sign-in button for Auth0.</p>
+            <h1 class="callout">DNS redirect service by DNSReRoute</h1>
+            <p>A powerful DNS and URL redirect service for your next <span id="typed"></span> project</p>
             <button type="button" class="signin btn btn-primary btn-lg">Sign In / Register</button>
           </div>
         </div>
@@ -92,34 +92,34 @@
           <div class="row">
             <div class="col-md-4 col-sm-4">
                 <h2><i class="fa fa-exchange"></i></h2>
-                <h3>Redirects</h3>
+                <h3>HTTP Redirects</h3>
                 <p>DNSReRoute offers both 301 (permanent) and 302 (temporary) redirects to your site for flexible options and maximum SEO retention</p>
             </div>
             <div class="col-md-4 col-sm-4">
                 <h2><i class="fa fa-bullseye"></i></h2>
                 <h3>Deep Link Redirection</h3>
-                <p>Promoting a product or sale? Does your site URL have too many slashes to count? Use DNSReRoute to route your customers directly to your taget page</p>
+                <p>Promoting a product or sale? Does your site URL have too many slashes to count? Use DNSReRoute to route your customers directly to a specific path or page, including URL parameters</p>
             </div>
             <div class="col-md-4 col-sm-4">
               <h2><i class="fa fa-group"></i></h2>
               <h3>Multi-User Organization Support</h3>
-              <p>DNSReRoute supports multiple users per organization to minimize cost and administration overhead for our customers</p>
+              <p>Our DNS redirect service supports multiple users per organization to minimize cost and administration overhead for our customers</p>
             </div>
           </div>
           <div class="row">
             <div class="col-md-4 col-sm-4">
-                <h2><i class="fa fa-wrench"></i></h2>
-                <h3>Full API Support</h3>
-                <p>Are you looking for a DNS solution you can integrate with your application or automation? All DNSReRoute functions are written as APIs, and we expose those same powerful APIs to our customer!</p>
+              <h2><i class="fa fa-wrench"></i></h2>
+              <h3>Full API Support</h3>
+              <p>Are you looking for a DNS solution you can integrate with your application or automation? All DNSReRoute functions are written as APIs, and we expose those same powerful APIs to our customer!</p>
             </div>
             <div class="col-md-4 col-sm-4">
-                <h2><i class="fa fa-dashboard"></i></h2>
-                <h3>Easy to Use Dashboard</h3>
-                <p>Not a tech expert? Do you just want an easy way to set up your site? DNSReRoute makes it easy with our admin dashboard</p>
+              <h2><i class="fa fa-dashboard"></i></h2>
+              <h3>Easy to Use Dashboard</h3>
+              <p>Not a tech expert? Do you just want an easy way to set up your site? DNSReRoute's DNS redirect service makes it easy with our admin dashboard</p>
             </div>
             <div class="col-md-4 col-sm-4">
               <h2><i class="fa fa-rocket"></i></h2>
-              <h3>Powerful and Reliable</h3>
+              <h3>Powerful and Reliable Redirects</h3>
               <p>DNSReRoute is a multi-tier application, hosted in multiple AWS datacenters. DNSReRoute uses separate servers for the API back end and the redirect service, so you can be confident your customers will always get to your site</p>
             </div>
           </div>
@@ -874,6 +874,19 @@
     </script>
 
     <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script src="assets/js/typed.js"></script>
+    <script>
+      $(function(){
+          $("#typed").typed({
+            strings: ["marketing", "promotional", "school"],
+            typeSpeed: 100,
+            loop: true,
+            loopCount: false,
+            backDelay: 500,
+            backSpeed: 50
+          });
+      });
+    </script>
 
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
