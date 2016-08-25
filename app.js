@@ -102,6 +102,7 @@ $(document).ready(function() {
           setUser(function(){
             setOrg(function(){
               populateDashboard();
+              gritterWrapper('Welcome!', 'Thanks for signing up for DNSReRoute!', 'green-check-200px.png');
             })
           });
         }, function() {
