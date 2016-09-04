@@ -2416,3 +2416,19 @@ label {
     50% { opacity:0; }
     100% { opacity:1; }
 }
+
+/* Responsive handling of YouTube iframe */
+.videoWrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+  left: 32%;
+}
+.videoWrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
